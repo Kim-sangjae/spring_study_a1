@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class JoinController {
     @GetMapping // 1) 공통매핑 + /join
                     // 2) 공통 매핑주소
-    public String join(){
+    public String join(Model model){
+
+        model.addAttribute("title","회원가입");
+        model.addAttribute("content","회원가입 내용!");
 
         return "member/join";
     }
