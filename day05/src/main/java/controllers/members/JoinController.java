@@ -14,19 +14,21 @@ public class JoinController {
                     // 2) 공통 매핑주소
     public String join(Model model){
 
-        model.addAttribute("title","회원가입");
-        model.addAttribute("content","회원가입 내용!");
+//        model.addAttribute("title","회원가입");
+//        model.addAttribute("content","회원가입 내용!");
+        Join join = new Join();
+        model.addAttribute("join",join);
 
         return "member/join";
     }
 
     @PostMapping
-    public String joinPs(Join join){ // getter setter로 받아올수 있는 클래스를 하나 만들어서 주입하면 짧게 쓸수있다
+    public String joinPs(Join join, Model model){ // getter setter로 받아올수 있는 클래스를 하나 만들어서 주입하면 짧게 쓸수있다
         System.out.println("POST로 유입됨");
         System.out.println(join);
 
-
-        return "redirect:/member/login";
+        return "member/join";
+//        return "redirect:/member/login";
 
     }
 

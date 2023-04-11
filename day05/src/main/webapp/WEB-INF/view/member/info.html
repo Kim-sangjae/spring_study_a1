@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymleaf.org">
 <body>
+    <header th:replace="~{outlines/header::common}"></header>
+    <th:block th:object="${member}">
+    [[*{@cLib.toConvert(userId)}]]
+    [[${@cLib.toConvert(member.userId)}]]
     <dl>
-        <dt>아이디</dt>
-        <dd th:text="${member.userId}"></dd>
+        <dt th:text="#{userId}"></dt>
+        <dd th:text="*{userId}"></dd>
     </dl>
 
     <dl>
-        <dt>회원명</dt>
-        <dd th:text="${member.userNm}"></dd>
+        <dt th:text="#{userNm}"></dt>
+        <dd th:text="*{userNm}"></dd>
     </dl>
 
     <dl>
-        <dt>휴대전화</dt>
-        <dd th:text="${member.mobile}"></dd>
+        <dt th:text="#{mobile}">휴대전화</dt>
+        <dd th:text="*{mobile}"></dd>
     </dl>
 
     <dl>
-        <dt>가입일시</dt>
-        <dd th:text="${member.regDt}"></dd>
+        <dt th:text="#{member.intro}">자기소개</dt>
+        <dd th:utext="*{intro}"></dd>
     </dl>
 
+    <dl>
+        <dt th:text="#{member.regDt}">가입일시</dt>
+        <dd th:text="*{#temporals.format(regDt,'yyyy.MM.dd')}"></dd>
+    </dl>
+</th:block>
+<footer th:replace="~{outlines/footer::common}"></footer>
 </body>
 </html>

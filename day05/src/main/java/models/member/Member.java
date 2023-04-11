@@ -10,6 +10,7 @@ public class Member {
     private String userId;
     private String userNm;
     private String mobile;
+    private String intro;
     private LocalDateTime regDt;
 
 }

@@ -1,17 +1,21 @@
 package config;
 
+import commons.CommonLibrary;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 @Configuration
 @EnableWebMvc // 웹 mvc 기본 세팅을 해준다 (몇가지는 맞게 바꿔야 한다)
@@ -43,7 +47,7 @@ public class MvcConfig implements  WebMvcConfigurer {
         templateEngine.setTemplateResolver(templateResolver());
         templateEngine.setEnableSpringELCompiler(true);
         templateEngine.addDialect(new Java8TimeDialect());
-        //templateEngine.addDialect(new LayoutDialect()); //레이아웃 구성
+        templateEngine.addDialect(new LayoutDialect()); //레이아웃 구성 (doBody와 비슷하게 구성)
         return templateEngine;
     }
 
@@ -61,5 +65,38 @@ public class MvcConfig implements  WebMvcConfigurer {
         registry.viewResolver(thymeleafViewResolver());
     }
 
+    @Bean
+    public MessageSource messageSource(){
+        ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
+        ms.setBasenames("messages.commons");
+        ms.setDefaultEncoding("UTF-8");
 
+
+        return ms;
+    }
+
+    @Bean
+    public CommonLibrary cLib (){
+        return new CommonLibrary();
+    }
+
+
+
+
+    @Override //컨트롤 없이 바로 view 추가
+    public void addViewControllers(ViewControllerRegistry registry) {
+
+
+       // url 매핑작업
+       registry.addViewController("/mypage")
+               .setViewName("mypage/index");
+
+       }
+
+
+    @Override // 정적인 자원들을 설정하는 메서드
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/");
+    }
 }
