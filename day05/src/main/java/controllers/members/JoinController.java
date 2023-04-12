@@ -1,15 +1,32 @@
 package controllers.members;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/member/join") // 공통적으로 /member로 매핑한다
+@RequiredArgsConstructor
 public class JoinController {
+
+    // final 또는 NonNull 을 붙여서 멤버변수 초기화 생성자로 주입시킨다
+    private final JoinValidator validator;
+
+    // 생성자로 벨리데이터 받아옴 - @RequiredArgsConstructor 을 쓰면 직접만들지 않아도된다
+//    public JoinController(JoinValidator validator){
+//        this.validator=validator;
+//    }
+
+
+
+
+
+
     @GetMapping // 1) 공통매핑 + /join
                     // 2) 공통 매핑주소
     public String join(Model model){
@@ -23,12 +40,16 @@ public class JoinController {
     }
 
     @PostMapping
-    public String joinPs(Join join, Model model){ // getter setter로 받아올수 있는 클래스를 하나 만들어서 주입하면 짧게 쓸수있다
-        System.out.println("POST로 유입됨");
-        System.out.println(join);
+    public String joinPs(Join join, Errors errors, Model model){ // getter setter로 받아올수 있는 클래스를 하나 만들어서 주입하면 짧게 쓸수있다
 
-        return "member/join";
-//        return "redirect:/member/login";
+        validator.validate(join,errors);
+        if(errors.hasErrors()){
+            // 에러가 있으면 처리 x ->양식을보여줌
+            return "member/join";
+        }
+
+        // 성공시에는 회원 로그인
+        return "redirect:/member/login";
 
     }
 
