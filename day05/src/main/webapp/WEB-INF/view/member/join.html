@@ -15,6 +15,8 @@
     <h1 th:text="#{member.join}"></h1>
 
     <form method="post" th:action="@{/member/join}" th:object="${join}">
+        <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+
         <dl>
             <dt th:text="#{userId}"></dt>
             <dd>
@@ -40,20 +42,25 @@
             <dt th:text="#{userNm}"></dt>
             <dd>
                 <input type="text" name="userNm" th:field="*{userNm}">
-                <div th:each="err : ${fields.errors('userNm')}" th:text="${err}"></div>
+                <div th:each="err : ${#fields.errors('userNm')}" th:text="${err}"></div>
+            </dd>
+        </dl>
+        <dl>
+            <dt th:text="#{email}"></dt>
+            <dd>
+                <input type="text" name="email" th:field="*{email}">
+                <div th:each="err : ${#fields.errors('email')}" th:text="${err}"></div>
             </dd>
         </dl>
 
         <div>
             <input type="checkbox" name="agree" value="true" id="agree" th:field="*{agree}">
             <label for="agree" th:text="#{member.terms.agree}"></label>
-            <div th:each="err : ${fields.errors('userNm')}" th:text="${err}"></div>
+            <div th:each="err : ${#fields.errors('agree')}" th:text="${err}"></div>
         </div>
         <button type="submit" th:text="#{member.join.action}"></button>
-
     </form>
 </main>
-
 
 
 

@@ -17,7 +17,7 @@ public class InfoController {
         member.setUserNm("사용자01");
         member.setMobile("010-1234-1234");
         member.setRegDt(LocalDateTime.now());
-        member.setIntro("<h1>자기소개!</h1>");
+//        member.setIntro("<h1>자기소개!</h1>");
 
         model.addAttribute("member",member);
         return "member/info";
