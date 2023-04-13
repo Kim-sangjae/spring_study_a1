@@ -4,22 +4,34 @@ import commons.CommonLibrary;
 import commons.interceptors.MemberOnlyInterceptors;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-@Import(DbConfig2.class)
+@Import(DbConfig.class)
 @Configuration
 @EnableWebMvc // 웹 mvc 기본 세팅을 해준다 (몇가지는 맞게 바꿔야 한다)
 public class MvcConfig implements  WebMvcConfigurer {
+    @Value("${environment}")
+    private String environment;
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
+
+
+
+
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -33,11 +45,13 @@ public class MvcConfig implements  WebMvcConfigurer {
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
+        boolean isCacheable = environment.equals("real")?true:false;
+
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/view/");
         templateResolver.setSuffix(".html");
-        templateResolver.setCacheable(false); // true면 캐시로 남겨서 바뀌지않는다 개발할때는 실시간으로봐야하기때문에 false
+        templateResolver.setCacheable(isCacheable); // true면 캐시로 남겨서 바뀌지않는다 개발할때는 실시간으로봐야하기때문에 false
         return templateResolver;
     }
 
@@ -100,7 +114,7 @@ public class MvcConfig implements  WebMvcConfigurer {
 
         // 파일 업로드 경로 정적 경로매칭
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:///D:/uploads/");
+                .addResourceLocations("file:///" + fileUploadPath);
 
     }
 
@@ -120,6 +134,17 @@ public class MvcConfig implements  WebMvcConfigurer {
         return new MemberOnlyInterceptors();
     }
 
+
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer properties(){
+        PropertySourcesPlaceholderConfigurer conf = new PropertySourcesPlaceholderConfigurer();
+        conf.setLocations(new ClassPathResource("application.properties"));
+
+
+
+        return conf;
+    }
 
 
 

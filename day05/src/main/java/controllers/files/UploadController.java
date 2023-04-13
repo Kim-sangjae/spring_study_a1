@@ -1,5 +1,6 @@
 package controllers.files;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,10 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/file/upload")
 public class UploadController {
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
+
+
     @GetMapping
     public String upload(){
 
@@ -23,7 +28,7 @@ public class UploadController {
         for(MultipartFile file : files) {
 
 
-            File uploadPath = new File("D:/uploads/" + file.getOriginalFilename());
+            File uploadPath = new File(fileUploadPath + file.getOriginalFilename());
             try {
                 file.transferTo(uploadPath);
 
