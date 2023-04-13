@@ -46,6 +46,8 @@ public class JoinController {
     public String joinPs(@Valid Join join, Errors errors, Model model){ // getter setter로 받아올수 있는 클래스를 하나 만들어서 주입하면 짧게 쓸수있다
                         //@Valid 객체는 바로뒤에 에러객체가 있어야된다
 
+        System.out.println(join); // 생년월일 보기위해 출력
+
         validator.validate(join,errors);
         if(errors.hasErrors()){
             // 에러가 있으면 처리 x ->양식을보여줌

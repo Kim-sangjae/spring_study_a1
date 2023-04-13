@@ -1,6 +1,7 @@
 package config;
 
 import commons.CommonLibrary;
+import commons.interceptors.MemberOnlyInterceptors;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -15,10 +16,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-@Import(DbConfig.class)
+@Import(DbConfig2.class)
 @Configuration
 @EnableWebMvc // 웹 mvc 기본 세팅을 해준다 (몇가지는 맞게 바꿔야 한다)
 public class MvcConfig implements  WebMvcConfigurer {
@@ -87,11 +85,10 @@ public class MvcConfig implements  WebMvcConfigurer {
 
     @Override //컨트롤 없이 바로 view 추가
     public void addViewControllers(ViewControllerRegistry registry) {
-
-
        // url 매핑작업
        registry.addViewController("/mypage")
                .setViewName("mypage/index");
+
 
        }
 
@@ -100,5 +97,31 @@ public class MvcConfig implements  WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/");
+
+        // 파일 업로드 경로 정적 경로매칭
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:///D:/uploads/");
+
     }
+
+
+
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+
+        registry.addInterceptor(memberOnlyInterceptors())
+                .addPathPatterns("/mypage/**");
+    }
+
+
+    @Bean // 싱글톤 객체로 관리하기위해
+    public MemberOnlyInterceptors memberOnlyInterceptors(){
+        return new MemberOnlyInterceptors();
+    }
+
+
+
+
+
 }

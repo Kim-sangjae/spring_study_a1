@@ -2,6 +2,7 @@ package models.member;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,5 +15,6 @@ public class Member {
     private String email;
     private String mobile;
     private LocalDateTime regDt;
+
 
 }
